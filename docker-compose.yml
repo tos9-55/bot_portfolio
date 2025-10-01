@@ -1,0 +1,55 @@
+x-settings:
+  image_versions:
+    RABBITMQ: &rabbitmq_image rabbitmq:3.8.16-management
+    DB: &db_image postgres:14-alpine
+    ADMINER: &adminer_image adminer:4.7.9
+    SCALITY: &scality_image scality/s3server:latest
+
+  logging: &default-logging
+    driver: "json-file"
+    options:
+      max-size: "100m"
+      max-file: "5"
+
+services:
+  bot:
+    build:
+      context: ./services/bot
+      dockerfile: Dockerfile
+    restart: always
+    command: bash -c "python3 main.py"
+    working_dir: /src
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASS: ${POSTGRES_PASS}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+    volumes:
+      - ./src:/src
+      - ./services/bot/main.py:/src/main.py
+    depends_on:
+      - db
+
+  db:
+    image: *db_image
+    container_name: db_data
+    volumes:
+      - ./data/database/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
+    restart: unless-stopped
+    logging: *default-logging
+
+  adminer:
+    image: *adminer_image
+    container_name: adminer_data
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    restart: unless-stopped
+    logging: *default-logging
