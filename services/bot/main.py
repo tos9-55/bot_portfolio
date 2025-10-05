@@ -4,6 +4,7 @@ import os
 from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
 from databases import Database
+from dotenv import load_dotenv
 
 from components.admin.AdminController import AdminController
 from components.images.infrastructure.repositories.core.IPicturesRepository import IPicturesRepository
@@ -24,6 +25,8 @@ from system.ioc.ioc import ioc
 
 
 async def main():
+    load_dotenv()
+
     database = Database(
         f"postgresql+asyncpg://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASS')}@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DATABASE')}",
         min_size=1,

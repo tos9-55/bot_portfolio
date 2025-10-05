@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.dialects.mysql import insert
 
 from components.user.infrastructure.models.UserModel import UserModel
@@ -51,3 +51,12 @@ class UserRepository(IUserRepository):
             is_admin=user_info.is_admin,
             username=user_info.username
         )
+
+    async def set_admin_status(self, user_id: int, is_admin: bool):
+        query = (
+            update(UserModelTable)
+            .where(UserModelTable.user_id == user_id)
+            .values(is_admin=is_admin)
+        )
+        async with self.__session_factory() as session:
+            await session.execute(query)

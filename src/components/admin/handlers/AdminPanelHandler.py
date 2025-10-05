@@ -5,6 +5,7 @@ from components.user.infrastructure.repositories.core.IUserRepository import IUs
 
 
 class AdminPanelHandler:
+
     def __init__(
         self,
         user_repository: IUserRepository

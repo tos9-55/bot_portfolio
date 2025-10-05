@@ -20,7 +20,8 @@ class GetAllUsersHandler:
             return
 
         users = await self.__user_repository.get_all()
-        text = await AllUsersView()(
+        text, keyboard = await AllUsersView()(
             users=users
         )
-        await call.message.answer(text=text)
+        await call.answer()
+        await call.message.edit_text(text=text, reply_markup=keyboard)

@@ -1,6 +1,7 @@
 import os
 from logging.config import fileConfig
 
+from dotenv import load_dotenv
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
@@ -24,6 +25,8 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 section = config.config_ini_section
+
+load_dotenv()
 
 config.set_section_option(section, "POSTGRES_USER", os.environ.get("POSTGRES_USER"))
 config.set_section_option(section, "POSTGRES_PASS", os.environ.get("POSTGRES_PASS"))

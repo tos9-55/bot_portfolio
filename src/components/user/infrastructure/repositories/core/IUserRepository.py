@@ -13,3 +13,6 @@ class IUserRepository:
 
     async def get_by_id(self, user_id: int) -> Optional[UserModel]:
         raise NotImplementedError()
+
+    async def set_admin_status(self, user_id: int, is_admin: bool):
+        raise NotImplementedError()
