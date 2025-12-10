@@ -42,6 +42,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASS}
     restart: unless-stopped
+    ports:
+      - "5432:5432"
     logging: *default-logging
 
   adminer:
